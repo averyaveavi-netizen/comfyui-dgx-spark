@@ -1,0 +1,7 @@
+# Secrets & état local — NE JAMAIS committer
+.env
+*.log
+
+# Données ComfyUI : modèles (des centaines de Go), outputs, custom_nodes, BD...
+# NE DOIVENT PAS aller sur le dépôt.
+data/

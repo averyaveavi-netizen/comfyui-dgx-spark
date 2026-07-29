@@ -1,0 +1,86 @@
+# ============================================================================
+# ComfyUI sur NVIDIA DGX Spark (GB10 / Blackwell / ARM64, CUDA 13)
+#
+#   Build :  docker compose build
+#   Run   :  docker compose up -d
+#   Logs  :  docker compose logs -f
+#   Stop  :  docker compose down
+#
+# Tes modèles/outputs/custom_nodes vivent dans ./data (bind mount) — voir README.
+# ============================================================================
+services:
+  comfyui:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: comfyui-dgx-spark:cu130
+    container_name: comfyui
+    hostname: comfyui
+    restart: unless-stopped
+
+    network_mode: host
+
+    # Reprend le CMD du Dockerfile et ajoute :
+    #  - mkdir /data/db : sinon --database-url échoue ("unable to open database file").
+    #  - --database-url : BD sqlite dans /data (persistante) au lieu de l'image.
+    #  - --enable-assets : active l'onglet "Assets" (scan de fond models/input/output).
+    # --listen 127.0.0.1 : ComfyUI n'a PAS d'authentification → localhost par défaut.
+    #   Pour un accès LAN, voir nginx/comfyui.conf ou le README (tunnel SSH).
+    command:
+      - sh
+      - -c
+      - >-
+        mkdir -p /data/db &&
+        exec python3 main.py --listen 127.0.0.1 --port 8188
+        --base-directory /data
+        --database-url sqlite:////data/db/comfyui.db
+        --enable-assets
+
+    # Accès GPU — nécessite le NVIDIA Container Toolkit sur l'hôte.
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+
+    environment:
+      NVIDIA_VISIBLE_DEVICES: all
+      NVIDIA_DRIVER_CAPABILITIES: compute,utility
+      # Token HuggingFace (téléchargement de modèles gated par certains custom nodes).
+      HF_TOKEN: ${HF_TOKEN:-}
+      HUGGING_FACE_HUB_TOKEN: ${HF_TOKEN:-}
+      # ComfyUI tourne sur le Python SYSTÈME (pas de venv) ; Ubuntu le marque
+      # EXTERNALLY-MANAGED (PEP 668) → uv/pip refusent d'installer les deps des
+      # custom nodes, et l'install via ComfyUI-Manager échoue. Ces vars autorisent
+      # l'install dans le Python système (le conteneur EST l'environnement).
+      UV_BREAK_SYSTEM_PACKAGES: "1"
+      PIP_BREAK_SYSTEM_PACKAGES: "1"
+
+    volumes:
+      # Données ComfyUI (models/, output/, input/, user/, custom_nodes/, db/).
+      # Mets tes modèles dans ./data/models/<type>/ (voir README).
+      - ./data:/data
+      # Cache HuggingFace partagé (évite de re-télécharger les encodeurs).
+      - comfyui_hf_cache:/root/.cache/huggingface
+
+    # PyTorch DataLoader (workers) : shm > 64 Mo (défaut Docker) requis.
+    shm_size: '16gb'
+    ipc: host
+
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS http://127.0.0.1:8188/ >/dev/null || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 120s
+
+    logging:
+      driver: json-file
+      options:
+        max-size: "50m"
+        max-file: "3"
+
+volumes:
+  comfyui_hf_cache:
