@@ -43,7 +43,7 @@ Your data (models, outputs, custom nodes, DB) lives in **`./data`** (bind mount 
 ```
 ./data/
 ├── models/
-│   ├── checkpoints/        # SD1.5 / SDXL / Pony all-in-one checkpoints
+│   ├── checkpoints/        # all-in-one checkpoints
 │   ├── diffusion_models/   # Flux / SD3 / Wan / Z-Image (UNET-only)
 │   ├── text_encoders/      # clip_l, t5xxl, umt5, mistral, qwen...
 │   ├── vae/
@@ -140,7 +140,7 @@ Tes données (modèles, sorties, custom nodes, BD) vivent dans **`./data`** (bin
 ```
 ./data/
 ├── models/
-│   ├── checkpoints/        # checkpoints tout-en-un SD1.5 / SDXL / Pony
+│   ├── checkpoints/        # checkpoints tout-en-un
 │   ├── diffusion_models/   # Flux / SD3 / Wan / Z-Image (UNET seul)
 │   ├── text_encoders/      # clip_l, t5xxl, umt5, mistral, qwen...
 │   ├── vae/
