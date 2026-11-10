@@ -1,6 +1,6 @@
 # ComfyUI on NVIDIA DGX Spark (Docker)
 
-**English** · [Français](#comfyui-sur-nvidia-dgx-spark-docker)
+**English** · [中文](#comfyui-nvidia-dgx-spark-docker)
 
 Docker stack to run **ComfyUI** — optimally — on an **NVIDIA DGX Spark**
 (**GB10 / Blackwell** chip, **ARM64/aarch64**, Ubuntu 24.04, CUDA 13).
@@ -95,7 +95,7 @@ comfyui-dgx-spark/
 ---
 ---
 
-# ComfyUI sur NVIDIA DGX Spark (Docker)
+# ComfyUI NVIDIA DGX Spark (Docker)
 
 [English](#comfyui-on-nvidia-dgx-spark-docker) · **Français**
 
