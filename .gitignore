@@ -1,7 +1,16 @@
-# Secrets & état local — NE JAMAIS committer
+# Sensitive information and local state — NEVER commit
 .env
 *.log
 
-# Données ComfyUI : modèles (des centaines de Go), outputs, custom_nodes, BD...
-# NE DOIVENT PAS aller sur le dépôt.
+# ComfyUI data: models (hundreds of GB), outputs, custom_nodes, databases...
+# NEVER upload to the repository.
+data/
+
+
+# 機密資訊與本機狀態 — 絕對不要提交 (commit)
+.env
+*.log
+
+# ComfyUI 資料：模型（數百 GB）、輸出結果 (outputs)、自訂節點 (custom_nodes)、資料庫...
+# 絕對不可上傳至程式碼儲存庫 (repository)。
 data/
