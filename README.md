@@ -30,7 +30,13 @@ The compose file also bakes in three fixes learned the hard way (see comments):
 ## 2. Installation
 
 ```bash
+git clone https://github.com/averyaveavi-netizen/comfyui-dgx-spark.git
+cd comfyui-dgx-spark/
+
 cp .env.example .env          # (optional) paste an HF_TOKEN for gated models
+nano .env
+HF_TOKEN=YOUR_KEY
+
 docker compose build          # builds torch cu130 + ComfyUI + Manager (long-ish)
 docker compose up -d
 docker compose logs -f
