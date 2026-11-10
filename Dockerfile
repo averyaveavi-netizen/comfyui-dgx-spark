@@ -39,7 +39,7 @@ RUN python3 -m pip install --break-system-packages \
 WORKDIR /opt
 RUN git clone --depth 1 https://github.com/comfyanonymous/ComfyUI.git \
     && git clone --depth 1 https://github.com/ltdrdata/ComfyUI-Manager.git \
-        ComfyUI/custom_nodes/ComfyUI-Manager
+        ./data/custom_nodes/ComfyUI-Manager
 
 WORKDIR /opt/ComfyUI
 # Requirements de ComfyUI + du Manager. --extra-index-url conservé pour que
