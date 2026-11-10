@@ -31,6 +31,9 @@ services:
       - -c
       - >-
         mkdir -p /data/db &&
+        mkdir -p /data/models &&
+        mkdir -p /data/outputs &&
+        mkdir -p /data/custom_nodes &&        
         exec python3 main.py --listen 127.0.0.1 --port 8188
         --base-directory /data
         --database-url sqlite:////data/db/comfyui.db
